@@ -13,7 +13,7 @@ import transformers
 
 transformers.logging.set_verbosity_error()
 from util.utils import prepare_optimizer, prepare_scheduler,prepare_optimizer_delamination
-from models.model_faviq import DialFactClassification
+from models.model import DialFactClassification
 from dataset.data_helper_faviq import create_dataloaders
 from evaluate import evaluate
 from config import parse_args
@@ -52,32 +52,21 @@ def train_and_validate(args):
                 attention_mask = batch['attention_mask'].to(args.device)
 
                 label_ids = batch['label'].to(args.device)
-                label_tmp = batch['label_tmp'].to(args.device)
 
                 claim_mask = batch['claim_mask'].to(args.device)
                 evidence_mask = batch['evidence_mask'].to(args.device)
                 question_mask = batch['question_mask'].to(args.device)
                 label_idx = batch['label_idx'].to(args.device)
 
-
                 output_dict = model(input_ids=input_ids,
-                                 attention_mask=attention_mask,
-                                 labels=label_ids,
-                                 label_tmp=label_tmp,
+                                    attention_mask=attention_mask,
+                                    labels=label_ids,
+                                    claim_mask=claim_mask,
+                                    evidence_mask=evidence_mask,
+                                    question_mask=question_mask,
+                                    label_idx=label_idx
+                                    )
 
-                                 claim_mask=claim_mask,
-                                 evidence_mask=evidence_mask,
-                                 question_mask=question_mask,
-
-                                 label_idx=label_idx
-
-                                 # claim_ids=claim_ids,
-                                 # claim_alone_mask=claim_alone_mask,
-                                 # evidence_ids=evidence_ids,
-                                 # evidence_alone_mask=evidence_alone_mask,
-                                 # question_ids=question_ids,
-                                 # question_alone_mask=question_alone_mask
-                                 )
                 loss_dict = output_dict.get("loss")
                 loss = loss_dict['loss']
                 losses.append(loss.cpu().item())

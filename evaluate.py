@@ -26,10 +26,9 @@ def compute_metrics_fn(preds, labels):
         "macro_recall":r,
         "macro_precision": p
     }
+
 def evaluate(args, model, loader):
     model.eval()
-    all_lf = None
-    all_x = None
     with torch.no_grad():
         all_preds, all_labels = [], []
         with tqdm.tqdm(total=loader.__len__()) as t:
@@ -45,7 +44,7 @@ def evaluate(args, model, loader):
 
                 label_idx = batch['label_idx'].to(args.device)
 
-                output_dict,npy_lf,npy_x = model(
+                output_dict = model(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
                     labels=label_ids,
@@ -60,27 +59,10 @@ def evaluate(args, model, loader):
                 pred = torch.argmax(logits, dim=1)
                 all_preds.extend(pred.cpu().numpy())
                 all_labels.extend(label_ids.cpu().numpy())
-
-                if all_lf is None:
-                    all_lf = npy_lf
-                    all_x = npy_x
-                else:
-                    all_lf = np.concatenate((all_lf,npy_lf),axis=0)
-                    all_x = np.concatenate((all_x,npy_x),axis=0)
-                print(all_lf.shape)
-                print(all_x.shape)
                 t.update(1)
 
         score_dic = compute_metrics_fn(all_preds,all_labels)
         print(f"acc = {score_dic['acc']},  macro_f1 = {score_dic['macro_f1']}, macro_recall = {score_dic['macro_recall']}, macro_precision = {score_dic['macro_precision']}")
-        np.save("all_lf.npy",all_lf)
-        np.save("all_x.npy",all_x)
-        np.save('label.npy',all_labels)
-        # with open(args.output_path,'w',encoding='utf-8') as f:
-        #     for pred_label,label in zip(all_preds,all_labels):
-        #         pred_label = label_map[int(pred_label)]
-        #         label = label_map[int(label)]
-        #         f.write(pred_label + ' ' + label + '\n')
 
     model.train()
     return score_dic

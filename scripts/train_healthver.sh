@@ -16,6 +16,10 @@ python train_healthver.py\
     --seed 2023 \
     --is_LabelEmb \
     --is_IGM \
+    --iter_num 3 \
+    --train_file ./data/tmp_data/healthver/train.json \
+    --dev_file ./data/tmp_data/healthver/dev.json \
+    --test_file ./data/tmp_data/healthver/healthver_test_with_label.json \
 
 
 

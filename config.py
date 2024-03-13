@@ -15,14 +15,8 @@ def parse_args():
 
     # ========================= Data Configs ==========================
     parser.add_argument('--train_file', type=str, default=data_path + 'healthver/healthver_train.json')
-    parser.add_argument('--dev_file', type=str, default=data_path + 'healthver/healthver_test_with_label.json')
-    parser.add_argument('--test_file', type=str, default=data_path + 'faviq_r_set/test.json')
-    #
-    # parser.add_argument('--train_file', type=str, default=data_path + 'faviq_a_set/train.json')
-    # parser.add_argument('--dev_file', type=str, default=data_path + 'faviq_a_set/dev.json')
-
-    # parser.add_argument('--train_file', type=str, default=data_path + 'colloquial/train.json')
-    # parser.add_argument('--dev_file', type=str, default=data_path + 'colloquial/test.json')
+    parser.add_argument('--dev_file', type=str, default=data_path + 'healthver/healthver_dev.json')
+    parser.add_argument('--test_file', type=str, default=data_path + 'healthver/healthver_test_with_label.json')
 
     parser.add_argument('--output_path', type=str, default='./results/eval.txt')
 
@@ -51,6 +45,7 @@ def parse_args():
     parser.add_argument('--gradient_accumulation_steps', type=int, default=1)
     parser.add_argument('--prefetch', default=0, type=int, help="")
     parser.add_argument('--num_workers', default=0, type=int, help="num_workers for dataloaders")
+    # parser.add_argument('--dropout_rate', default=0.1, type=float)
 
     # ========================== model =============================
     parser.add_argument('--pretrain_model_dir', type=str, default='F:/pretrained_model/roberta-base')

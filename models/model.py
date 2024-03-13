@@ -10,7 +10,6 @@ from transformers.utils import logging
 from transformers.activations import gelu
 
 from component import IGM
-import numpy
 
 logger = logging.get_logger(__name__)
 
@@ -231,14 +230,11 @@ class RobertaForSequenceClassification(RobertaPreTrainedModel):
                 if len(label_idx.shape)==2:
                     label_idx = label_idx[0]
                 label_feats = sequence_output[:,label_idx,:]
-                # label_feats2 = self.get_label_feats()
-                # label_feats2 = label_feats2.repeat(sequence_output.shape[0],1,1)
-                # label_feats = label_feats * 0.5 + label_feats2 * 0.5
             else:
                 label_feats = self.get_label_feats()
                 label_feats = label_feats.repeat(sequence_output.shape[0],1,1)
 
-            logits,npy_lf,npy_x = self.classifier(None,x=cat_vector,label_feats=label_feats)
+            logits = self.classifier(None,x=cat_vector,label_feats=label_feats)
 
         else:
             logits = self.classifier(None,x=cat_vector,label_feats=None)
@@ -280,7 +276,7 @@ class RobertaForSequenceClassification(RobertaPreTrainedModel):
             logits=logits,
             # hidden_states=outputs.hidden_states,
             # attentions=outputs.attentions,
-        ),npy_lf,npy_x
+        )
 
 class RobertaClassificationHead(nn.Module):
     """Head for sentence-level classification tasks."""
@@ -306,7 +302,6 @@ class RobertaClassificationHead(nn.Module):
             x = features[:, 0, :]  # take <s> token (equiv. to [CLS])
         x = self.dropout(x)
         x = self.dense(x) # bs * dim
-        npy_x = x.data.cpu().numpy()
         if label_feats is not None:
             label_feats = self.dropout(label_feats)
             label_feats = self.embedding_dense(label_feats)
@@ -315,11 +310,10 @@ class RobertaClassificationHead(nn.Module):
             else:
                 emb_x = torch.cat([x,label_feats[:,0,:],label_feats[:,1,:]],dim=1)
             emb_x = self.emb_attention(emb_x.unsqueeze(1))
-            npy_lf = emb_x.data.cpu().numpy()
             emb_x = torch.tanh(emb_x)
             emb_x = self.dropout(emb_x)
             emb_x = self.embedding_out_proj(emb_x)
-            return emb_x,npy_lf,npy_x
+            return emb_x
 
         x = torch.tanh(x)
         x = self.dropout(x)

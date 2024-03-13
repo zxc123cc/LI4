@@ -69,12 +69,12 @@ if __name__ == '__main__':
     process_data(file_path='../data/raw_data/faviq_r_set/dev.jsonl', out_path='../data/tmp_data/faviq_r_set/dev.json')
     process_data(file_path='../data/raw_data/faviq_r_set/test.jsonl', out_path='../data/tmp_data/faviq_r_set/test.json')
 
-    process_data_dpr(file_path='../data/raw_data/faviq_a_set/train.jsonl',
-                     drp_path='../data/raw_data/dpr_faviq/faviq_train_w_evidentiality.json',
-                     out_path='../data/tmp_data/dpr_faviq/train3.json')
-    process_data_dpr(file_path='../data/raw_data/faviq_a_set/dev.jsonl',
-                     drp_path='../data/raw_data/dpr_faviq/faviq_dev.json',
-                     out_path='../data/tmp_data/dpr_faviq/dev3.json')
+    # process_data_dpr(file_path='../data/raw_data/faviq_a_set/train.jsonl',
+    #                  drp_path='../data/raw_data/dpr_faviq/faviq_train_w_evidentiality.json',
+    #                  out_path='../data/tmp_data/dpr_faviq/train3.json')
+    # process_data_dpr(file_path='../data/raw_data/faviq_a_set/dev.jsonl',
+    #                  drp_path='../data/raw_data/dpr_faviq/faviq_dev.json',
+    #                  out_path='../data/tmp_data/dpr_faviq/dev3.json')
     # process_data_dpr(file_path='./data/raw_data/faviq_a_set/test.jsonl',
     #                  drp_path='./data/raw_data/dpr_faviq/faviq_test.json',
     #                  out_path='./data/tmp_data/dpr_faviq/test.json')

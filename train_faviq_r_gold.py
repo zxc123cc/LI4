@@ -13,7 +13,7 @@ import transformers
 
 transformers.logging.set_verbosity_error()
 from util.utils import prepare_optimizer, prepare_scheduler,prepare_optimizer_delamination
-from models.model_faviq import DialFactClassification
+from models.model import DialFactClassification
 from dataset.data_helper_faviq import create_dataloaders
 from evaluate import evaluate
 from config import parse_args
@@ -62,7 +62,6 @@ def train_and_validate(args):
                 output_dict = model(input_ids=input_ids,
                                     attention_mask=attention_mask,
                                     labels=label_ids,
-                                    label_tmp=None,
 
                                     claim_mask=claim_mask,
                                     evidence_mask=evidence_mask,
@@ -91,7 +90,7 @@ def train_and_validate(args):
                 t.set_postfix(tmp_dic)
                 t.update(1)
 
-                if step % dev_step == 0 and (epoch+1) > 2:
+                if step % dev_step == 0 and (epoch+1) > 3:
                     meters = evaluate(args, model, val_dataloader)
                     score = meters['acc']
                     logging.info(f"val: acc = {meters['acc']},  macro_f1 = {meters['macro_f1']}, macro_recall = {meters['macro_recall']}, macro_precision = {meters['macro_precision']}")

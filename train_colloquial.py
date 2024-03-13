@@ -13,7 +13,7 @@ import transformers
 
 transformers.logging.set_verbosity_error()
 from util.utils import prepare_optimizer, prepare_scheduler,prepare_optimizer_delamination
-from models.model_colloquial import DialFactClassification
+from models.model import DialFactClassification
 from dataset.data_helper_colloquial import create_dataloaders
 from evaluate import evaluate
 from config import parse_args
@@ -41,7 +41,7 @@ def train_and_validate(args):
 
     best_score = 0
     step, global_step = 0, 0
-    dev_step = 1000
+    dev_step = 2000
     print("start training")
     logging.info(f"start time >>> {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
     for epoch in range(args.max_epochs):
@@ -59,16 +59,16 @@ def train_and_validate(args):
                 label_idx = batch['label_idx'].to(args.device)
 
                 output_dict = model(input_ids=input_ids,
-                                 attention_mask=attention_mask,
-                                 labels=label_ids,
-                                 label_tmp=None,
+                                    attention_mask=attention_mask,
+                                    labels=label_ids,
+                                    label_tmp=None,
 
-                                 claim_mask=claim_mask,
-                                 evidence_mask=evidence_mask,
-                                 question_mask=question_mask,
+                                    claim_mask=claim_mask,
+                                    evidence_mask=evidence_mask,
+                                    question_mask=question_mask,
 
-                                 label_idx=label_idx
-                                 )
+                                    label_idx=label_idx
+                                    )
                 loss_dict = output_dict.get("loss")
                 loss = loss_dict['loss']
                 if args.gradient_accumulation_steps > 1:
